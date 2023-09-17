@@ -58,92 +58,69 @@ void factorial()
       fact[i]=(fact[i-1]*i)%mod; 
   }
 }
-class TrieNode
+
+//*************DSU******************
+ll parent[200001];
+ll sz[200001];
+void make(ll v)
 {
-public:
-   TrieNode *child[26];
-    bool flag;
-    TrieNode()
-    {
-        flag=false;
-        for(int i=0;i<26;i++)
-        child[i]=NULL;
-    }
-    bool check(char c)
-    {
-        return (child[c - 'a'] != NULL);
-    }
-    void put(char c, TrieNode *node)
-    {
-        child[c - 'a'] = node;
-    }
-    TrieNode *get(char c)
-    {
-        return child[c - 'a'];
-    }
-    void setEnd()
-    {
-        flag = true;
-    }
-    bool isLast()
-   {
-        return flag;
-   }
-};
-class Trie
+    parent[v] = v;
+    sz[v] = 1;
+}
+ll find(ll v)
 {
-public:
-    TrieNode *root;
-   Trie()
-    {
-        root = new TrieNode();
+    if (parent[v] == v)
+        return v;
+    else // path compresssion
+        return parent[v] = find(parent[v]);
+}
+void Union(ll a, ll b)
+{
+    a =find(a);
+    b =find(b);
+    if (a != b)
+    { // union by size
+        if (sz[a]<sz[b])
+            swap(a,b);
+        parent[b] = a;
+        // b ka  tree ko a ka nicha joda hai
+        sz[a]+=sz[b];
     }
-    void insert(string word)
-    {
-        TrieNode *node = root;
-        for (auto &i : word)
-        {
-            if (!(node->check(i)))
-            {
-                node->put(i, new TrieNode());
-            }
-            node = node->get(i);
-        }
-        node->setEnd();
-    }
-    bool search(string word)
-    {
-        TrieNode *node = root;
-        for (auto &i : word)
-        {
-            if (!(node->check(i)))
-            {
-                return false;
-            }
-            node = node->get(i);
-        }
-        return node->isLast();
-    }
-    bool startsWith(string prefix)
-    {
-        TrieNode *node = root;
-        for (auto &i : prefix)
-        {
-            if (!(node->check(i)))
-                return false;
-            node = node->get(i);
-        }
-        return true;
-    }
-};
-string s;
+}
+
 int main()
 {
     BOLT;
-    cin>>s;
-    ll k;
-    cin>>k;
-    insert(s);
+    ll n,m;
+    cin>>n>>m;
+    ll ans=0;
+    for(ll i=0;i<n;i++)
+    {
+        make(i+1);
+    }
+    vvl res;
+    for(int i=0;i<m;i++)
+    {
+        ll a,b;
+        cin>>a>>b;
+        Union(a,b);
+    }
 
+    for(int i=2;i<=n;i++)
+    {
+        if(find(i-1)==find(i))
+        continue;
+        else
+        {
+            Union(i-1,i);
+            ans++;
+            res.push_back({i-1,i});
+        }
+    }
+    cout<<ans<<endl;
+    for(auto it:res)
+    {
+        cout<<it[0]<<" "<<it[1]<<endl;
+    }
     return 0;
 }
