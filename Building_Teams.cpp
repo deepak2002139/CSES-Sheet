@@ -277,24 +277,11 @@ ll npr(int n, int r)
 {
     return fact[n]/(fact[n-r]);
 }
-
-int main()
+void solve(vector<ll>&nums,ll i,bool &flag,
+    map<ll,vector<ll>>&mp)
 {
-    BOLT;
-    ll n,m;
-    cin>>n>>m;
-    map<ll,vector<ll>>mp;
-    for(ll i=0;i<n;i++)
-    {
-        ll a,b;
-        mp[a].push_back(b);
-        mp[b].push_back(a);
-    }          
-    vector<ll>nums(n,0);
     queue<ll>pq;
-    pq.push(0);
-    nums[0]=1;
-    bool flag=false;
+    pq.push(i);
     while(!pq.empty())
     {
         int a=pq.front();
@@ -303,12 +290,12 @@ int main()
         {
             for(auto it:mp[a])
             {
-                if(it==1)
+                if(nums[it]==1)
                 {
                     flag=true;
                     break;
                 }
-                else
+                else if(nums[it]==0)
                 {
                     nums[it]=2;
                     pq.push(it);
@@ -319,12 +306,12 @@ int main()
         {
             for(auto it:mp[a])
             {
-                if(it==2)
+                if(nums[it]==2)
                 {
                     flag=true;
                     break;
                 }
-                else
+                else if(nums[it]==0)
                 {
                     nums[it]=1;
                     pq.push(it);
@@ -332,12 +319,38 @@ int main()
             }
         }
     }
+}
+int main()
+{
+    BOLT;
+    ll n,m;
+    cin>>n>>m;
+    map<ll,vector<ll>>mp;
+    for(ll i=0;i<m;i++)
+    {
+        ll a,b;
+        cin>>a>>b;
+        mp[a].push_back(b);
+        mp[b].push_back(a);
+    }          
+    vector<ll>nums(n+1,0);
+    bool flag=false;
+    for(int i=1;i<=n;i++)
+    {
+        if(nums[i]==0)
+        {
+            nums[i]=1;
+            solve(nums,i,flag,mp);
+        }
+        if(flag)
+        break;
+    }
     if(flag)
     cout<<"IMPOSSIBLE"<<endl;
     else
     {
-        for(auto it:nums)
-        cout<<it<<endl;
+        for(ll i=1;i<=n;i++)
+        cout<<nums[i]<<" ";
     }
     return 0;
 }

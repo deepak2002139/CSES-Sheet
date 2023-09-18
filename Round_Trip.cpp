@@ -277,67 +277,33 @@ ll npr(int n, int r)
 {
     return fact[n]/(fact[n-r]);
 }
+ll ans=-1;
+void solve(ll i,vector<bool>vis,vector<ll>res,ll count,ll so)
+{
 
+    if(i==so)
+    {
+        res.push_back(i)
+    }
+}
 int main()
 {
     BOLT;
     ll n,m;
     cin>>n>>m;
-    map<ll,vector<ll>>mp;
-    for(ll i=0;i<n;i++)
+    map<ll,vl>mp;
+    vector<bool>vis(n+1,false);
+    for(ll i=0;i<m;i++)
     {
         ll a,b;
+        cin>>a>>b;
         mp[a].push_back(b);
         mp[b].push_back(a);
-    }          
-    vector<ll>nums(n,0);
-    queue<ll>pq;
-    pq.push(0);
-    nums[0]=1;
-    bool flag=false;
-    while(!pq.empty())
-    {
-        int a=pq.front();
-        pq.pop();
-        if(nums[a]==1)
-        {
-            for(auto it:mp[a])
-            {
-                if(it==1)
-                {
-                    flag=true;
-                    break;
-                }
-                else
-                {
-                    nums[it]=2;
-                    pq.push(it);
-                }
-            }
-        }
-        else if(nums[a]==2)
-        {
-            for(auto it:mp[a])
-            {
-                if(it==2)
-                {
-                    flag=true;
-                    break;
-                }
-                else
-                {
-                    nums[it]=1;
-                    pq.push(it);
-                }
-            }
-        }
     }
-    if(flag)
-    cout<<"IMPOSSIBLE"<<endl;
-    else
+    vector<ll>res;
+    for(int int i=1;i<n;i++)
     {
-        for(auto it:nums)
-        cout<<it<<endl;
+        solve(i,vis,res,0,i);
     }
     return 0;
 }

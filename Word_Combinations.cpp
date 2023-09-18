@@ -136,14 +136,34 @@ public:
         return true;
     }
 };
-string s;
+ll dp[5001];
 int main()
 {
     BOLT;
+    string s;
     cin>>s;
+    ll n=s.size();
+    Trie *t=new Trie();
     ll k;
     cin>>k;
-    insert(s);
-
+    while(k--)
+    {
+        string x;
+        cin>>x;
+        t->insert(x);
+    }
+    memset(dp,0,sizeof(dp));
+    dp[n]=1;
+    for(ll i=n-1;i>=0;i--)
+    {
+        string res=s.substr(i);
+        if(t->search(res))
+        {
+            dp[i]=1+dp[i+1];
+        }
+        else
+        dp[i]=dp[i+1];
+    }
+    cout<<dp[0]<<endl;
     return 0;
 }
