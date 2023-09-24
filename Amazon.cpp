@@ -65,9 +65,9 @@ public:
     bool flag;
     TrieNode()
     {
-        flag=false;
-        for(int i=0;i<26;i++)
-        child[i]=NULL;
+        flag = false;
+        for (int i = 0; i < 26; i++)
+            child[i] = NULL;
     }
     bool check(char c)
     {
@@ -94,6 +94,7 @@ class Trie
 {
 public:
     TrieNode *root;
+ 
    Trie()
     {
         root = new TrieNode();
@@ -136,34 +137,170 @@ public:
         return true;
     }
 };
-ll dp[5001];
+//  End of Trie Template----
+//************PRIME CHECK************* 
+bool checkp(int n)
+{
+  if(n == 1)
+return false;
+ for (int i = 2; i * i <= n; i++)
+{
+if(n % i == 0)
+return false;
+}
+return true;
+}
+//**************SIEVE****************
+// BOOL HAS LESS TIME COMPLEXITY THAN INT
+vector<bool>vis(9000001,1);
+void sieve()
+{
+   for (int i=2;i*i<= 9000001; i++)
+   {
+    if (vis[i] == true)
+    {
+       for(int j = i * i; j <= 9000001; j += i)
+          vis[j]=false;
+    }
+}
+}
+//*************DSU******************
+ll parent[200001];
+ll sz[200001];
+void make(ll v)
+{
+    parent[v] = v;
+    sz[v] = 1;
+}
+ll find(ll v)
+{
+    if (parent[v] == v)
+        return v;
+    else // path compresssion
+        return parent[v] = find(parent[v]);
+}
+void Union(ll a, ll b)
+{
+    a =find(a);
+    b =find(b);
+    if (a != b)
+    { // union by size
+        if (sz[a]<sz[b])
+            swap(a,b);
+        parent[b] = a;
+        // b ka  tree ko a ka nicha joda hai
+        sz[a]+=sz[b];
+    }
+}
+//***********prime factorization*****
+vector<pair<ll, ll>> pf(ll n)
+{
+    vector<pair<ll, ll>> ans;
+    for (ll i = 2; i * i <= n; i++)
+    {
+        if (n%i==0)
+        {
+            ll cnt=0;
+            while (n % i == 0)
+            {
+                cnt++;
+                 n/=i;
+            }
+            pair<ll, ll> p;
+            p.first = i;
+            p.second = cnt;
+           ans.push_back(p);
+        }
+    }
+    if(n > 1)
+   {
+        pair<ll, ll> p;
+        p.first = n;
+        p.second = 1;
+        ans.push_back(p);
+    }
+return ans;
+}
+//**************bin exp************
+ll binex(ll base,ll exp, ll M)
+{
+    if (exp== 0)
+        return 1;
+    ll res=binex(base, exp / 2, M);
+    if (exp % 2 == 1)
+        return (((res * res) % M) * base) % M;
+    else
+        return (res * res) % M;
+}
+ 
+ll pwr(ll a, ll n)
+{
+    ll res = 1;
+    while (n)
+
+    {
+        if (n % 2)
+        {
+            res *= a;
+            n--;
+       }
+       else
+       {
+            a *= a;
+            n /= 2;
+        }
+    }
+    return res;
+}
+
+//***********pop_count*******
+ll ppc(ll n)
+{
+   ll c=0;
+   for(c;c<n;++c)
+    n&=n-1;
+   return c;
+}
+//***********CEIL************
+ll ceill(ll up, ll down)
+{
+    ll res=up/down;
+    if(up%down!=0)
+    res++;
+    return res;
+}
+ll ncr(int n,int r)
+{
+    return fact[n]/(fact[r]*fact[n-r]);
+}
+ll npr(int n, int r)
+{
+    return fact[n]/(fact[n-r]);
+}
+
 int main()
 {
     BOLT;
-    string s;
-    cin>>s;
-    ll n=s.size();
-    Trie *t=new Trie();
-    ll k;
-    cin>>k;
-    while(k--)
-    {
-        string x;
-        cin>>x;
-        t->insert(x);
-    }
-    memset(dp,0,sizeof(dp));
-    dp[n]=1;
-    for(ll i=n-1;i>=0;i--)
-    {
-        string res=s.substr(i);
-        if(t->search(res))
-        {
-            dp[i]=1+dp[i+1];
+    int n;
+    cin>>n;
+    int arr[n];
+    for(int i=0;i<n;i++)
+    cin>>arr[i];
+    int ans=0;
+    int low=0;
+    int cnt=0;
+    map<int,int>mp;
+    for(int i=0;i<n;i++){
+        mp[arr[i]]++;
+        while(mp[arr[i]]>=2){
+            mp[arr[low]]--;
+            low++;
         }
-        else
-        dp[i]=dp[i+1];8u
+        ans+=(n-i)*(i-low+1);
     }
-    cout<<dp[0]<<endl;
+    cout<<ans<<endl;
+    
+    
+
     return 0;
 }
