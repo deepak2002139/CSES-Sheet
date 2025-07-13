@@ -1,20 +1,20 @@
-#include<iostream>
+#define ll long long
+#include <bits/stdc++.h>
 using namespace std;
-int main(){
-    string str;
-    cin>>str;
-    int sum=0;
-    for(int i=0;i<str.length();i++){
-        sum+=(str[i]);
+long long solve(int N,int K,string S) {
+    string s=S;
+    int n=N;
+    unordered_map<char,int>mpp;
+    for(int i=0;i<n;i++) mpp[s[i]]++;
+    vector<pair<int,char>>v;
+    for(auto x:mpp) {
+        v.push_back({x.second,x.first});
     }
-    while(sum/10){
-        int p=0;
-        while(sum){
-            p+=sum%10;
-            sum/=10;
-        }
-        sum=p;
+    sort(v.rbegin(),v.rend());
+    if(v.size()<K) return 0;
+    long long ans=1,mod=1000000007;
+    for(int i=0;i<K;i++) {
+        ans*=v[i].first; ans%=mod;
     }
-    cout<<sum<<endl;
-}
-
+    return ans;
+}1
